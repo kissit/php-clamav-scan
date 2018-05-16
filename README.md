@@ -20,9 +20,9 @@ $clamav = new Clamav(array('clamd_sock' => '/path/to/clamd.sock'));
 * Scan a file
 ```
 if($clamav->scan("/path/to/file/to/scan.txt")) {
-    echo "YAY, file is safe!";
+    echo "YAY, file is safe\n";
 } else {
-    echo "BOO, file is a virus!";
+    echo "BOO, file is a virus.  Message: " . $clamav->getMessage() . "\n";
 }
 ```
 
@@ -39,8 +39,8 @@ $this->load->library('clamav', array('clamd_sock' => '/path/to/clamd.sock'));
 * Scan a file
 ```
 if($this->clamav->scan("/path/to/file/to/scan.txt")) {
-    echo "YAY, file is safe!";
+    echo "YAY, file is safe\n";
 } else {
-    echo "BOO, file is a virus!";
+    echo "BOO, file is a virus.  Message: " . $clamav->getMessage() . "\n";
 }
 ```

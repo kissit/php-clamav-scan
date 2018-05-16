@@ -15,7 +15,7 @@ if(file_put_contents("$test_dir/clamav_test.txt", $good_test)) {
     if($clamav->scan("$test_dir/clamav_test.txt")) {
         echo "YAY, file is safe!\n";
     } else {
-        echo "BOO, file is a virus!\n";
+        echo "BOO, file is a virus.  Message: " . $clamav->getMessage() . "\n";
     }
     unlink("$test_dir/clamav_test.txt");
 }
@@ -24,7 +24,7 @@ if(file_put_contents("$test_dir/clamav_test.txt", $bad_test)) {
     if($clamav->scan("$test_dir/clamav_test.txt")) {
         echo "YAY, file is safe!\n";
     } else {
-        echo "BOO, file is a virus!\n";
+        echo "BOO, file is a virus.  Message: " . $clamav->getMessage() . "\n";
     }
     unlink("$test_dir/clamav_test.txt");
 }
