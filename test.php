@@ -31,24 +31,27 @@ if(file_put_contents("$test_dir/clamav_test.txt", $bad_test)) {
     unlink("$test_dir/clamav_test.txt");
 }
 
-// Same tests using a network socket
+// Same tests using a network socket on windows
+/*
 echo "\nTesting using the network socket option...\n";
-$clamav = new Clamav(array("clamd_ip" => "127.0.0.1"));
-if(file_put_contents("$test_dir/clamav_test.txt", $good_test)) {
+$clamav = new Clamav(array("clamd_ip" => "192.168.0.105"));
+if(file_put_contents('c:\test with spaces\clamav_test.txt', $good_test)) {
     echo "Testing a good file...\n";
-    if($clamav->scan("$test_dir/clamav_test.txt")) {
+    if($clamav->scan('c:\test with spaces\clamav_test.txt')) {
         echo "YAY, file is safe!\n";
     } else {
         echo "BOO, file is a virus.  Message: " . $clamav->getMessage() . "\n";
     }
-    unlink("$test_dir/clamav_test.txt");
+    unlink('c:\test with spaces\clamav_test.txt');
 }
-if(file_put_contents("$test_dir/clamav_test.txt", $bad_test)) {
+
+if(file_put_contents('c:\test with spaces\clamav_test.txt', $bad_test)) {
     echo "Testing a bad file...\n";
-    if($clamav->scan("$test_dir/clamav_test.txt")) {
+    if($clamav->scan('c:\test with spaces\clamav_test.txt')) {
         echo "YAY, file is safe!\n";
     } else {
         echo "BOO, file is a virus.  Message: " . $clamav->getMessage() . "\n";
     }
-    unlink("$test_dir/clamav_test.txt");
+    unlink('c:\test with spaces\clamav_test.txt');
 }
+*/
