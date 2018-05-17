@@ -88,20 +88,20 @@ class Clamav {
 
     // Function to scan the passed in file.  Returns true if safe, false otherwise.
     public function scan($file) {
-        $this->message = "";
         if(file_exists($file)) {
             $scan = $this->send("SCAN $file");
-            $scan = explode(":", $scan);
-            if(isset($scan[1])) {
-                $scan = trim($scan[1]);
-                $this->message = $scan;
-                if($scan == "OK") {
-                    return true;
-                }
-            } else {
-                $this->message = "Scan failed";
-            }
-        }
+			$scan = substr(strrchr($scan, ":"), 1);
+			if($scan !== false) {
+				$this->message = trim($scan);
+				if($this->message == "OK") {
+					return true;
+				}
+			} else {
+				$this->message = "Scan failed";
+			}
+        } else {
+			$this->message = "File not found";
+		}
         return false;
     }
 
