@@ -32,6 +32,8 @@
 class Clamav {
     private $clamd_sock = "/var/run/clamav/clamd.sock";
     private $clamd_sock_len = 20000;
+    private $clamd_ip = null;
+    private $clamd_port = 3310;
     private $message = "";
 
     // Your basic constructor.
@@ -43,13 +45,28 @@ class Clamav {
         if(isset($opts['clamd_sock_len'])) {
             $this->clamd_sock_len = $opts['clamd_sock_len'];
         }
+        if(isset($opts['clamd_ip'])) {
+            $this->clamd_ip = $opts['clamd_ip'];
+        }
+        if(isset($opts['clamd_port'])) {
+            $this->clamd_port = $opts['clamd_port'];
+        }
     }
 
-    // Private function to open a connection to the Clamd socket
+    // Private function to open a socket to clamd based on the current options
     private function socket() {
-        $socket = socket_create(AF_UNIX, SOCK_STREAM, 0);
-        if(socket_connect($socket, $this->clamd_sock)) {
-            return $socket;
+        if(!empty($this->clamd_ip) && !empty($this->clamd_port)) {
+            // Attempt to use a network based socket
+            $socket = socket_create(AF_INET, SOCK_STREAM, 0);
+            if(socket_connect($socket, $this->clamd_ip, $this->clamd_port)) {
+                return $socket;
+            }
+        } else {
+            // By default we just use the local socket
+            $socket = socket_create(AF_UNIX, SOCK_STREAM, 0);
+            if(socket_connect($socket, $this->clamd_sock)) {
+                return $socket;
+            }
         }
         return false;
     }
@@ -62,6 +79,7 @@ class Clamav {
     // Function to ping Clamd to make sure its functioning
     public function ping() {
         $ping = $this->send("PING");
+        var_dump($ping);
         if($ping == "PONG") {
             return true;
         }
@@ -70,20 +88,20 @@ class Clamav {
 
     // Function to scan the passed in file.  Returns true if safe, false otherwise.
     public function scan($file) {
-        $this->message = "";
         if(file_exists($file)) {
             $scan = $this->send("SCAN $file");
-            $scan = explode(":", $scan);
-            if(isset($scan[1])) {
-                $scan = trim($scan[1]);
-                $this->message = $scan;
-                if($scan == "OK") {
-                    return true;
-                }
-            } else {
-                $this->message = "Scan failed";
-            }
-        }
+			$scan = substr(strrchr($scan, ":"), 1);
+			if($scan !== false) {
+				$this->message = trim($scan);
+				if($this->message == "OK") {
+					return true;
+				}
+			} else {
+				$this->message = "Scan failed";
+			}
+        } else {
+			$this->message = "File not found";
+		}
         return false;
     }
 
