@@ -90,18 +90,18 @@ class Clamav {
     public function scan($file) {
         if(file_exists($file)) {
             $scan = $this->send("SCAN $file");
-			$scan = substr(strrchr($scan, ":"), 1);
-			if($scan !== false) {
-				$this->message = trim($scan);
-				if($this->message == "OK") {
-					return true;
-				}
-			} else {
-				$this->message = "Scan failed";
-			}
+            $scan = substr(strrchr($scan, ":"), 1);
+            if($scan !== false) {
+                $this->message = trim($scan);
+                if($this->message == "OK") {
+                    return true;
+                }
+            } else {
+                $this->message = "Scan failed";
+            }
         } else {
-			$this->message = "File not found";
-		}
+            $this->message = "File not found";
+        }
         return false;
     }
 
