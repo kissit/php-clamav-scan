@@ -79,7 +79,6 @@ class Clamav {
     // Function to ping Clamd to make sure its functioning
     public function ping() {
         $ping = $this->send("PING");
-        var_dump($ping);
         if($ping == "PONG") {
             return true;
         }
