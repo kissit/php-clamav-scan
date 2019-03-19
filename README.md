@@ -9,7 +9,7 @@ To use this on Windows, you must use the network socket option.  As far as I'm a
 ### Example standalone usage:
 * Include the class
 ```
-require 'Clamav.php';
+use KissitPHPClamavScan\Clamav;
 ```
 * Instantiate an object.
 ```

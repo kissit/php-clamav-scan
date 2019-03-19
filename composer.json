@@ -1,0 +1,15 @@
+{
+    "name": "kissit/php-clamav-scan",
+    "description": "A simple PHP library for scanning files with ClamAV",
+    "type": "library",
+    "license": "BSD 2-Clause",
+    "require": {
+        "php": "^5.3 || ^7.0",
+        "ext-sockets": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "KissitPHPClamavScan\\": "src/"
+        }
+    }
+}

@@ -1,6 +1,8 @@
 <?php
 // A simple test file for php-clamav-scan library
-require 'Clamav.php';
+require __DIR__.'/../vendor/autoload.php';
+
+use KissitPHPClamavScan\Clamav;
 
 // Directory where test files will be written
 $test_dir = '/tmp';
