@@ -104,6 +104,44 @@ class Clamav {
         return false;
     }
 
+    // Function to scan the passed in stream.  Returns true if safe, false otherwise.
+    public function scanstream($file) {
+        $socket = $this->socket();
+        if(!$socket) {
+            $this->message = "Scan failed, unable to open socket!";
+            return false;
+        }
+        if(file_exists($file)) {
+            if ($scan_fh = fopen($file, 'rb')) {
+                $chunksize = filesize($file) < 8192 ? filesize($file) : 8192;
+                $command = "zINSTREAM\0";
+                socket_send($socket, $command, strlen($command), 0);
+                while (!feof($scan_fh)) {
+                    $data = fread($scan_fh, $chunksize);
+                    $packet = pack(sprintf("Na%d", strlen($data)), strlen($data), $data);
+                    socket_send($socket, $packet, strlen($packet), 0);
+                }
+                $packet = pack("Nx",0);
+                socket_send($socket, $packet, strlen($packet), 0);
+                socket_recv($socket, $scan, $this->clamd_sock_len, 1);
+                socket_close($socket);
+                trim($scan);
+                $scan = substr(strrchr($scan, ":"), 1);
+                if($scan !== false) {
+                    $this->message = trim($scan);
+                    if($this->message == "OK") {
+                        return true;
+                    }
+                } else {
+                    $this->message = "Scan failed";
+                }
+            }
+        } else {
+            $this->message = "File not found";
+        }
+        return false;
+    }
+
     // Function to send a command to the Clamd socket.  In case you need to send any other commands directly.
     public function send($command) {
         if(!empty($command)) {
