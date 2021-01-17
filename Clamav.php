@@ -123,7 +123,7 @@ class Clamav {
                 }
                 $packet = pack("Nx",0);
                 socket_send($socket, $packet, strlen($packet), 0);
-                socket_recv($socket, $scan, $this->clamd_sock_len, 1);
+                socket_recv($socket, $scan, $this->clamd_sock_len, 0);
                 socket_close($socket);
                 trim($scan);
                 $scan = substr(strrchr($scan, ":"), 1);
